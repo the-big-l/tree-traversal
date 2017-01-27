@@ -9,15 +9,12 @@ class PolyTreeNode
     @children = []
   end
 
-  def parent=(parent_node)
-    unless parent == parent_node
-      if parent_node.nil?
-        parent.remove_child(self)
-        @parent = nil
+  def parent=(new_parent)
+    unless parent == new_parent
+      if new_parent.nil?
+        remove_parent
       else
-        parent_node.add_child(self) unless parent_node.children.include?(self)
-        @parent.remove_child(self) unless parent.nil?
-        @parent = parent_node
+        add_parent(new_parent)
       end
     end
   end
@@ -30,6 +27,15 @@ class PolyTreeNode
     children.delete(child_node)
   end
 
-  # def remove_parent
+  def remove_parent
+    parent.remove_child(self)
+    @parent = nil
+  end
+
+  def add_parent(new_parent)
+    new_parent.add_child(self) unless new_parent.children.include?(self)
+    @parent.remove_child(self) unless parent.nil?
+    @parent = new_parent
+  end
 
 end
