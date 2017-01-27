@@ -12,11 +12,32 @@ class KnightPathFinder
     ws: [-1, 2]
   }
 
+  def self.valid_moves(pos)
+    DELTA.values.map { |dir| [dir, pos].transpose.map { |a| a.inject(:+)}}
+  end
+
   def initialize(start_pos)
     @start_pos = start_pos
+    @visited_positions = [start_pos]
+  end
+
+  def new_move_positions(pos)
+    moves = self.class.valid_moves(pos).select { |p| possible_move?(p) }
+    @visited_positions.concat(moves)
+  end
+
+  def possible_move?(pos)
+    @visited_positions.none? { |prev_pos| prev_pos == pos }
   end
 
   def find_path(end_pos)
-    @path = [@start_pos]
   end
+
+  private
+
+  def build_move_tree
+
+  end
+
+
 end
