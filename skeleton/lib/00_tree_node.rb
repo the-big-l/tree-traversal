@@ -40,9 +40,9 @@ class PolyTreeNode
     queue = [self]
 
     until queue.empty?
-      current_node = queue.pop
+      current_node = queue.shift
       return current_node if current_node.value == target
-      current_node.children.each { |child| queue.unshift(child) }
+      queue.concat(current_node.children)
     end
 
     nil
