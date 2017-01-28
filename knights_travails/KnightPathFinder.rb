@@ -1,6 +1,9 @@
 require_relative '../poly_tree_node/skeleton/lib/00_tree_node'
+require 'byebug'
+
 # KinghtPathFinder class
 class KnightPathFinder
+  
   DELTA = {
     ne: [-2, 1],
     nw: [-2, -1],
@@ -12,7 +15,7 @@ class KnightPathFinder
     ws: [-1, 2]
   }
 
-  def self.valid_moves(pos)
+  def self.possible_moves(pos)
     DELTA.values.map { |dir| [dir, pos].transpose.map { |a| a.inject(:+)}}
   end
 
@@ -22,12 +25,15 @@ class KnightPathFinder
   end
 
   def new_move_positions(pos)
-    moves = self.class.valid_moves(pos).select { |p| possible_move?(p) }
+    moves = self.class.possible_moves(pos).select { |p| valid_move?(p) }
     @visited_positions.concat(moves)
+
+    moves
   end
 
-  def possible_move?(pos)
-    @visited_positions.none? { |prev_pos| prev_pos == pos }
+  def valid_move?(pos)
+    !@visited_positions.include?(pos) &&
+      pos.all? { |coord| (0..7).include?(coord) }
   end
 
   def find_path(end_pos)
@@ -36,8 +42,17 @@ class KnightPathFinder
   private
 
   def build_move_tree
+    @root = PolyTreeNode.new(@start_pos)
+    queue = [@root]
 
+    until queue.empty?
+      current_node = queue.shift
+
+      new_move_positions(current_node.value).each do |pos|
+        child_node = PolyTreeNode.new(pos)
+        child_node.parent = current_node
+        queue << child_node
+      end
+    end
   end
-
-
 end
