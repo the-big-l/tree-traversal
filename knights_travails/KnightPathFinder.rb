@@ -22,8 +22,14 @@ class KnightPathFinder
   def initialize(start_pos)
     @start_pos = start_pos
     @visited_positions = [start_pos]
-    build_move_tree 
+    build_move_tree
   end
+
+  def find_path(end_pos)
+    @root.bfs(end_pos)
+  end
+
+  private
 
   def new_move_positions(pos)
     moves = self.class.possible_moves(pos).select { |p| valid_move?(p) }
@@ -36,12 +42,6 @@ class KnightPathFinder
     !@visited_positions.include?(pos) &&
       pos.all? { |coord| (0..7).include?(coord) }
   end
-
-  def find_path(end_pos)
-    @root.bfs(end_pos)
-  end
-
-  private
 
   def build_move_tree
     @root = PolyTreeNode.new(@start_pos)
