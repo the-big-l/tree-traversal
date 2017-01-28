@@ -3,7 +3,7 @@ require 'byebug'
 
 # KinghtPathFinder class
 class KnightPathFinder
-  
+
   DELTA = {
     ne: [-2, 1],
     nw: [-2, -1],
@@ -22,6 +22,7 @@ class KnightPathFinder
   def initialize(start_pos)
     @start_pos = start_pos
     @visited_positions = [start_pos]
+    build_move_tree 
   end
 
   def new_move_positions(pos)
@@ -37,6 +38,7 @@ class KnightPathFinder
   end
 
   def find_path(end_pos)
+    @root.bfs(end_pos)
   end
 
   private
