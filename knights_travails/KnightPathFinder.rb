@@ -15,8 +15,8 @@ class KnightPathFinder
     ws: [-1, 2]
   }
 
-  def self.possible_moves(pos)
-    DELTA.values.map { |dir| [dir, pos].transpose.map { |a| a.inject(:+)}}
+  def self.possible_moves(pos) # add reverse to exactly match ex. paths
+    DELTA.values.reverse.map { |dir| [dir[0] + pos[0], dir[1] + pos[1]] }
   end
 
   def initialize(start_pos)
@@ -26,10 +26,21 @@ class KnightPathFinder
   end
 
   def find_path(end_pos)
-    @root.bfs(end_pos)
+    child = @root.bfs(end_pos)
+    trace_path_back(child)
   end
 
   private
+
+  def trace_path_back(node)
+    path = [node.value]
+    current_node = node
+    until current_node == @root
+      current_node = current_node.parent
+      path.unshift(current_node.value)
+    end
+    path
+  end
 
   def new_move_positions(pos)
     moves = self.class.possible_moves(pos).select { |p| valid_move?(p) }
